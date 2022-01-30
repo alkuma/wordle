@@ -12,6 +12,7 @@ type Props = {
 
 export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
   const charStatuses = getStatuses(guesses)
+  console.log(charStatuses)
 
   const onClick = (value: KeyValue) => {
     if (value === 'ENTER') {
@@ -19,6 +20,7 @@ export const Keyboard = ({ onChar, onDelete, onEnter, guesses }: Props) => {
     } else if (value === 'DELETE') {
       onDelete()
     } else {
+      console.log(value)
       onChar(value)
     }
   }

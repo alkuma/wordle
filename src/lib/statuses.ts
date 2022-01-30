@@ -76,102 +76,201 @@ export type CharValue =
   | 'फ़'
   | 'ॲ'
 
-// must start with one of these or with one of the vowels
-export type consonants =
-  | 'क'
-  | 'ख'
-  | 'ग'
-  | 'घ'
-  | 'ङ'
-  | 'च'
-  | 'छ'
-  | 'ज'
-  | 'झ'
-  | 'ञ'
-  | 'ट'
-  | 'ठ'
-  | 'ड'
-  | 'ढ'
-  | 'ण'
-  | 'त'
-  | 'थ'
-  | 'द'
-  | 'ध'
-  | 'न'
-  | 'प'
-  | 'फ'
-  | 'ब'
-  | 'भ'
-  | 'म'
-  | 'य'
-  | 'र'
-  | 'ल'
-  | 'व'
-  | 'श'
-  | 'ष'
-  | 'स'
-  | 'ह'
-  | 'क़'
-  | 'ख़'
-  | 'ग़'
-  | 'ज़'
-  | 'ड़'
-  | 'ढ़'
-  | 'फ़'
+export  const consonantsNuktaNotAllowed =
+  [ 'क़'
+  , 'ख़'
+  , 'ग़'
+  , 'घ'
+  , 'ङ'
+  , 'च'
+  , 'छ'
+  , 'ज़'
+  , 'झ'
+  , 'ञ'
+  , 'ट'
+  , 'ठ'
+  , 'ड़'
+  , 'ढ़'
+  , 'ण'
+  , 'त'
+  , 'थ'
+  , 'द'
+  , 'ध'
+  , 'न'
+  , 'प'
+  , 'फ़'
+  , 'ब'
+  , 'भ'
+  , 'म'
+  , 'य'
+  , 'र'
+  , 'ल'
+  , 'व'
+  , 'श'
+  , 'ष'
+  , 'स'
+  , 'ह'
+    ]
 
-// nukta may appear immediately after these consonants
-export type consonantsWithNuktaAllowed =
-  | 'क'
-  | 'ख'
-  | 'ग'
-  | 'ज'
-  | 'ड'
-  | 'ढ'
-  | 'फ'
+export const consonantsNuktaAllowed =
+  [ 'क'
+  , 'ख'
+  , 'ग'
+  , 'ज'
+  , 'ड'
+  , 'ढ'
+  , 'फ'
+    ]
 
 // must start with one of these or with one of the consonants
-export type vowels =
-  | 'अ'
-  | 'आ'
-  | 'इ'
-  | 'ई'
-  | 'उ'
-  | 'ऊ'
-  | 'ऋ'
-  | 'ऍ'
-  | 'ए'
-  | 'ऐ'
-  | 'ऑ'
-  | 'ओ'
-  | 'औ'
-  | 'ॲ'
+export const vowels =
+  [ 'अ'
+  , 'आ'
+  , 'इ'
+  , 'ई'
+  , 'उ'
+  , 'ऊ'
+  , 'ऋ'
+  , 'ऍ'
+  , 'ए'
+  , 'ऐ'
+  , 'ऑ'
+  , 'ओ'
+  , 'औ'
+  , 'ॲ'
+    ]
 
 // if vowel, can optionally end with one of the vowelModifiers
-export type vowelModifiers =
-  | 'ँ'
-  | 'ं'
-  | 'ः'
+export const vowelModifiers =
+  [ 'ँ'
+  , 'ं'
+  , 'ः'
+    ]
 
 // may occur after a consonant or after a nukta
-export type consonantModifiers =
-  | 'ँ'
-  | 'ं'
-  | 'ः'
-  | 'ा'
-  | 'ि'
-  | 'ी'
-  | 'ु'
-  | 'ू'
-  | 'ृ'
-  | 'ॅ'
-  | 'े'
-  | 'ै'
-  | 'ॉ'
-  | 'ो'
-  | 'ौ'
-  | '्'
+export const consonantModifiers =
+  [ 'ँ'
+  , 'ं'
+  , 'ः'
+  , 'ा'
+  , 'ि'
+  , 'ी'
+  , 'ु'
+  , 'ू'
+  , 'ृ'
+  , 'ॅ'
+  , 'े'
+  , 'ै'
+  , 'ॉ'
+  , 'ो'
+  , 'ौ'
+  , '्'
+    ]
 
-export const getStatuses = (
+export const CodePointType = {
+  UNKNOWN: 0,
+  VOWEL: 1,
+  CONSONANT_NUKTA_ALLOWED: 2,
+  CONSONANT_NUKTA_NOT_ALLOWED: 3,
+  VOWEL_MODIFIER: 4,
+  CONSONANT_MODIFIER: 5,
+};
+Object.freeze(CodePointType);
+
+export const getCodePointType = (value: string) => {
+  if(consonantsNuktaNotAllowed.includes(value)) {
+    return CodePointType.CONSONANT_NUKTA_NOT_ALLOWED;
+  }
+  if(consonantsNuktaAllowed.includes(value)) {
+    return CodePointType.CONSONANT_NUKTA_ALLOWED;
+  }
+  if(vowels.includes(value)) {
+    return CodePointType.VOWEL;
+  }
+  if(vowelModifiers.includes(value)) {
+    return CodePointType.VOWEL_MODIFIER;
+  }
+  if(consonantModifiers.includes(value)) {
+    return CodePointType.CONSONANT_MODIFIER;
+  }
+  return CodePointType.UNKNOWN;
+}
+
+export const splitToGraphemes = (value: string) => {
+  let graphemes = ["", "", "", "", "", ""]
+  let currentGrapheme = 0;
+  let previousCodePointType = CodePointType.UNKNOWN;
+  let currentCodePointType = CodePointType.UNKNOWN;
+  for(let i = 0; i < value.length; ++i) {
+    let currentChar = value.charAt(i);
+    // first character will always go to first grapheme, no surprises here
+    if (i === 0) {
+      graphemes[0] = currentChar
+      previousCodePointType = getCodePointType(currentChar);
+    } else {
+      currentCodePointType = getCodePointType(currentChar);
+      switch (previousCodePointType) {
+        case CodePointType.VOWEL:
+          switch (currentCodePointType) {
+            case CodePointType.VOWEL_MODIFIER:
+              graphemes[currentGrapheme] = `${graphemes[currentGrapheme]}${currentChar}`
+              break;
+            default:
+              ++currentGrapheme
+              graphemes[currentGrapheme] = currentChar
+          }
+          break;
+        case CodePointType.CONSONANT_NUKTA_ALLOWED:
+          switch(currentCodePointType) {
+            case CodePointType.VOWEL_MODIFIER:
+            case CodePointType.VOWEL:
+            case CodePointType.CONSONANT_MODIFIER:
+              graphemes[currentGrapheme] = `${graphemes[currentGrapheme]}${currentChar}`
+              break;
+            default:
+              ++currentGrapheme
+              switch(currentCodePointType) {
+                case CodePointType.VOWEL:
+                case CodePointType.CONSONANT_NUKTA_ALLOWED:
+                case CodePointType.CONSONANT_NUKTA_NOT_ALLOWED:
+                  graphemes[currentGrapheme] = currentChar
+                  break;
+              }
+          }
+          break;
+        case CodePointType.CONSONANT_NUKTA_NOT_ALLOWED:
+          switch(currentCodePointType) {
+            case CodePointType.VOWEL_MODIFIER:
+            case CodePointType.VOWEL:
+            case CodePointType.CONSONANT_MODIFIER:
+              if(currentChar !== "़") { // NUKTA not alllowed so ignore it
+                graphemes[currentGrapheme] = `${graphemes[currentGrapheme]}${currentChar}`
+              }
+              break;
+            default:
+              ++currentGrapheme
+              switch(currentCodePointType) {
+                case CodePointType.VOWEL:
+                case CodePointType.CONSONANT_NUKTA_ALLOWED:
+                case CodePointType.CONSONANT_NUKTA_NOT_ALLOWED:
+                  graphemes[currentGrapheme] = currentChar
+                  break;
+              }
+          }
+          break;
+        case CodePointType.VOWEL_MODIFIER:
+          graphemes[currentGrapheme] = `${graphemes[currentGrapheme]}${currentChar}`
+          ++currentGrapheme
+          break;
+        case CodePointType.CONSONANT_MODIFIER:
+          break;
+      }
+    }
+  }
+
+}
+
+  export const getStatuses = (
   guesses: string[]
 ): { [key: string]: CharStatus } => {
   const charObj: { [key: string]: CharStatus } = {}

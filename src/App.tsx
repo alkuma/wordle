@@ -11,6 +11,10 @@ import {
   loadGameStateFromLocalStorage,
   saveGameStateToLocalStorage,
 } from './lib/localStorage'
+import {CodePointType} from './lib/statuses'
+import {getCodePointType} from './lib/statuses'
+import {consonantsNuktaNotAllowed} from './lib/statuses'
+import {vowels} from './lib/statuses'
 
 function App() {
   const [currentGuess, setCurrentGuess] = useState('')
@@ -43,8 +47,21 @@ function App() {
   }, [isGameWon])
 
   const onChar = (value: string) => {
-    if (currentGuess.length < 5 && guesses.length < 6) {
-      setCurrentGuess(`${currentGuess}${value}`)
+    const codePointType = getCodePointType(value)
+    let isValid = false;
+
+    if(currentGuess.length === 0) {
+      switch(codePointType) {
+        case CodePointType.VOWEL:
+        case CodePointType.CONSONANT_NUKTA_NOT_ALLOWED:
+        case CodePointType.CONSONANT_NUKTA_ALLOWED:
+          isValid = true;
+      }
+    }
+    if(isValid) {
+      if (currentGuess.length < 5 && guesses.length < 6) {
+        setCurrentGuess(`${currentGuess}${value}`)
+      }
     }
   }
 

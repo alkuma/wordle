@@ -58,46 +58,45 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    How to play
+                    कैसे खेलें?
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      Guess the WORDLE in 6 tries. After each guess, the color
-                      of the tiles will change to show how close your guess was
-                      to the word.
+                      छः बाज़ियों में शब्द का पता लगाइए। हर बाज़ी के बाद, रंगों के जरिए आपको यह बताया जाएगा
+                      कि आप सही शब्द के कितने क़रीब थे।
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="W" status="correct" />
-                      <Cell value="E" />
-                      <Cell value="A" />
-                      <Cell value="R" />
-                      <Cell value="Y" />
+                      <Cell value="दुः" status="correct" />
+                      <Cell value="ख" />
+                      <Cell value="दा" />
+                      <Cell value="यि" />
+                      <Cell value="नी" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter W is in the word and in the correct spot.
+                      इस शब्द में "दुः" मौजूद है और सही जगह पर भी है
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="P" />
-                      <Cell value="I" />
-                      <Cell value="L" status="present" />
-                      <Cell value="O" />
-                      <Cell value="T" />
+                      <Cell value="अं" />
+                      <Cell value="क" />
+                      <Cell value="मा" status="present" />
+                      <Cell value="लि" />
+                      <Cell value="का" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter L is in the word but in the wrong spot.
+                      इस शब्द में "मा" मौजूद तो है पर इस जगह पर नहीं
                     </p>
 
                     <div className="flex justify-center mb-1 mt-4">
-                      <Cell value="V" />
-                      <Cell value="A" />
-                      <Cell value="G" />
-                      <Cell value="U" status="absent" />
-                      <Cell value="E" />
+                      <Cell value="ह" />
+                      <Cell value="स्ता" />
+                      <Cell value="क्ष" />
+                      <Cell value="रि" status="absent" />
+                      <Cell value="त" />
                     </div>
                     <p className="text-sm text-gray-500">
-                      The letter U is not in the word in any spot.
+                      इस शब्द में "रि" कहीं भी मौजूद नहीं है।
                     </p>
                   </div>
                 </div>
